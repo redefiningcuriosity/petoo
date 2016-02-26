@@ -1,0 +1,49 @@
+<?php
+
+class Userdetails_model extends CI_Model
+{
+    
+   function __construct() {
+        parent::__construct();
+    }
+
+   function check($data)
+    {
+	$id=$data['id'];
+	$fname=$data['fname'];
+	$lname=$data['lname'];
+	$email=$data['email'];
+	$pic=$data['pic'];
+
+	$this->db->where('id',$id);
+        $query = $this->db->get('userdetails');
+        if($query->num_rows()==1){
+		foreach ($query->result() as $row){
+		        $value = array(
+		                    'username'=> $row->id,
+		                    'logged_in'=>TRUE
+		                );
+            }
+           	$this->session->set_userdata($value);
+           	return TRUE;
+	}
+	else
+	{
+		 $inputarray = array('id'=>$data['id'],
+                            'fname'=>$data['fname'],
+                            'lname'=>$data['lname'],
+			    'email'=>$data['email'],
+                            'picture'=>$data['pic']);
+        
+	       $this->db->insert('userdetails', $inputarray);
+	       if($this->db->affected_rows()>0){
+		    return TRUE;
+		    
+	       }
+	       else{
+		    return FALSE;
+	       }
+	}
+    }
+}
+?>
